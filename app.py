@@ -1,5 +1,6 @@
 
-from flask import Flask, render_template
+
+from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
 
@@ -9,7 +10,10 @@ def home():
 
 @app.route("/health")
 def health():
-    return {"status": "Sunglasses AI is running"}
+    return jsonify({
+        "status": "online",
+        "project": "Sunglasses AI"
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
