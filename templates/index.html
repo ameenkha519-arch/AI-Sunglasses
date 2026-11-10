@@ -2,366 +2,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080a10">
-<title>Sunglasses AI | Discover Your Style</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b12">
+  <title>Sunglasses AI | Virtual Try-On</title>
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
 
-body {
-    background: #080a10;
-    color: #fff;
-    font-family: Arial, sans-serif;
-}
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-header {
-    height: 75px;
-    padding: 0 7%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #252832;
-}
-
-.logo {
-    font-size: 23px;
-    font-weight: 800;
-    letter-spacing: -1px;
-}
-
-.logo span {
-    color: #42d9ff;
-}
-
-nav a {
-    color: #bbb;
-    text-decoration: none;
-    margin-left: 25px;
-    font-size: 14px;
-}
-
-.hero {
-    padding: 85px 7%;
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 45px;
-    align-items: center;
-}
-
-.tag {
-    color: #42d9ff;
-    letter-spacing: 3px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-h1 {
-    font-size: clamp(43px, 6vw, 76px);
-    line-height: 1.05;
-    margin: 25px 0;
-    letter-spacing: -3px;
-}
-
-h1 span {
-    color: #42d9ff;
-}
-
-.description {
-    color: #a5a9b5;
-    line-height: 1.8;
-    max-width: 490px;
-}
-
-.btn {
-    display: inline-block;
-    margin-top: 30px;
-    padding: 15px 27px;
-    border: 0;
-    border-radius: 8px;
-    background: #42d9ff;
-    color: #061018;
-    font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.visual {
-    min-height: 360px;
-    border: 1px solid #28313d;
-    border-radius: 25px;
-    background:
-      radial-gradient(ellipse at center, #18394b 0%, #101923 45%, #0b0e15 75%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.glasses {
-    font-size: clamp(100px, 17vw, 190px);
-    filter: drop-shadow(0 15px 25px #42d9ff55);
-}
-
-.visual-label {
-    position: absolute;
-    bottom: 25px;
-    color: #b7d9e4;
-    letter-spacing: 3px;
-    font-size: 11px;
-}
-
-.section {
-    padding: 65px 7%;
-    text-align: center;
-}
-
-.section h2 {
-    font-size: 35px;
-    margin-bottom: 15px;
-}
-
-.subtitle {
-    color: #9298a5;
-    margin-bottom: 35px;
-}
-
-.tryon {
-    max-width: 700px;
-    margin: auto;
-    padding: 30px;
-    border: 1px solid #28313d;
-    border-radius: 18px;
-    background: #11151e;
-}
-
-.upload {
-    display: block;
-    width: 100%;
-    padding: 30px 15px;
-    border: 2px dashed #384d5b;
-    border-radius: 12px;
-    cursor: pointer;
-    color: #42d9ff;
-}
-
-input[type=file] {
-    display: none;
-}
-
-#preview {
-    display: none;
-    max-width: 100%;
-    max-height: 400px;
-    margin: 25px auto;
-    border-radius: 12px;
-}
-
-#status {
-    color: #42d9ff;
-    margin-top: 15px;
-    font-size: 14px;
-}
-
-.styles {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 25px;
-}
-
-.style {
-    background: #202735;
-    color: white;
-    border: 1px solid #354353;
-    padding: 12px 18px;
-    border-radius: 25px;
-    cursor: pointer;
-}
-
-.style.active {
-    border-color: #42d9ff;
-    color: #42d9ff;
-}
-
-.features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 35px;
-}
-
-.feature {
-    background: #11151e;
-    padding: 28px 15px;
-    border: 1px solid #252c38;
-    border-radius: 15px;
-}
-
-.feature h3 {
-    margin-bottom: 12px;
-    color: #42d9ff;
-}
-
-.feature p {
-    color: #9da4b0;
-    line-height: 1.6;
-    font-size: 14px;
-}
-
-footer {
-    border-top: 1px solid #252832;
-    text-align: center;
-    padding: 30px;
-    color: #9298a5;
-    font-size: 13px;
-}
-
-@media(max-width: 750px) {
-    header { padding: 0 5%; }
-    nav a { margin-left: 10px; font-size: 12px; }
-    .hero {
-        grid-template-columns: 1fr;
-        padding: 60px 6%;
+    body {
+      background: #080b12;
+      color: #f5f7ff;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
     }
-    .features { grid-template-columns: 1fr; }
-    .section { padding: 55px 6%; }
-    .visual { min-height: 270px; }
-}
-</style>
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 7%;
+      border-bottom: 1px solid #20283a;
+    }
+
+    .logo { font-size: 23px; font-weight: 800; }
+    .logo span { color: #45b8ff; }
+
+    .tag {
+      color: #45b8ff;
+      border: 1px solid #245276;
+      padding: 8px 13px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 65px 20px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: #45b8ff;
+      letter-spacing: 3px;
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 7vw, 68px);
+      line-height: 1.08;
+      margin-bottom: 20px;
+    }
+
+    h1 span { color: #45b8ff; }
+
+    .intro {
+      color: #9ca8bc;
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto 35px;
+    }
+
+    .studio {
+      max-width: 760px;
+      margin: auto;
+      padding: 20px;
+      background: #111827;
+      border: 1px solid #26354a;
+      border-radius: 22px;
+    }
+
+    .preview {
+      position: relative;
+      width: 100%;
+      min-height: 260px;
+      background: #080d17;
+      border: 1px dashed #36516e;
+      border-radius: 15px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #photo {
+      display: none;
+      width: 100%;
+      height: auto;
+    }
+
+    #glasses {
+      position: absolute;
+      display: none;
+      width: 45%;
+      pointer-events: none;
+    }
+
+    .placeholder { color: #9ca8bc; padding: 35px; }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button, .upload {
+      border: 1px solid #34516d;
+      background: #172438;
+      color: white;
+      padding: 13px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover, .upload:hover {
+      background: #174b75;
+    }
+
+    .primary {
+      background: #1689d0;
+      border-color: #1689d0;
+    }
+
+    input { display: none; }
+
+    .styles { margin-top: 28px; }
+    .styles h3 { margin-bottom: 15px; }
+
+    .style-btn.active {
+      background: #1689d0;
+      border-color: #1689d0;
+    }
+
+    #status {
+      color: #45b8ff;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 15px;
+      margin-top: 60px;
+      text-align: left;
+    }
+
+    .feature {
+      background: #111827;
+      border: 1px solid #26354a;
+      padding: 23px;
+      border-radius: 15px;
+    }
+
+    .feature h3 { margin-bottom: 10px; }
+    .feature p { color: #9ca8bc; line-height: 1.6; font-size: 14px; }
+
+    footer {
+      text-align: center;
+      color: #718096;
+      padding: 30px;
+      border-top: 1px solid #20283a;
+    }
+
+    @media (max-width: 500px) {
+      main { padding-top: 45px; }
+      .studio { padding: 12px; }
+      header { padding: 18px 5%; }
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-    <div class="logo">SUNGLASSES<span>AI.</span></div>
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#tryon">Try On</a>
-        <a href="#features">Features</a>
-    </nav>
+  <div class="logo">SUNGLASSES<span> AI.</span></div>
+  <div class="tag">AI VIRTUAL STUDIO</div>
 </header>
 
 <main>
-<section class="hero" id="home">
-    <div>
-        <div class="tag">THE FUTURE OF EYEWEAR</div>
+  <p class="eyebrow">YOUR STYLE. YOUR EXPERIENCE.</p>
 
-        <h1>Find Your<br>
-        <span>Perfect Look.</span></h1>
+  <h1>Try Your Next<br><span>Perfect Look.</span></h1>
 
-        <p class="description">
-            Discover your signature style with Sunglasses AI.
-            Explore modern eyewear and experience a new way
-            to find the perfect pair.
-        </p>
+  <p class="intro">
+    Explore sunglasses styles with our virtual try-on experience.
+    Upload a photo and discover a new look.
+  </p>
 
-        <a href="#tryon" class="btn">Explore Virtual Try-On →</a>
+  <section class="studio">
+    <div class="preview" id="preview">
+      <p class="placeholder" id="placeholder">
+        Your photo will appear here
+      </p>
+      <img id="photo" alt="Your uploaded photo">
+      <img id="glasses" alt="Sunglasses overlay">
     </div>
 
-    <div class="visual">
-        <div class="glasses">🕶️</div>
-        <div class="visual-label">STYLE MEETS TECHNOLOGY</div>
+    <div class="actions">
+      <label class="upload" for="fileInput">Upload Photo</label>
+      <input type="file" id="fileInput" accept="image/*">
+      <button class="primary" id="cameraBtn">Open Camera</button>
+      <button id="resetBtn">Reset</button>
     </div>
-</section>
 
-<section class="section" id="tryon">
-    <h2>Virtual Try-On</h2>
-    <p class="subtitle">
-        Upload your photo and start exploring your style.
-    </p>
-
-    <div class="tryon">
-        <label class="upload" for="photo">
-            <h3>＋ Upload Your Photo</h3>
-            <p>Choose a JPG, PNG or WEBP image</p>
-        </label>
-
-        <input type="file" id="photo" accept="image/png,image/jpeg,image/webp">
-
-        <img id="preview" alt="Your uploaded photo">
-
-        <div class="styles">
-            <button class="style active">Aviator</button>
-            <button class="style">Wayfarer</button>
-            <button class="style">Round</button>
-            <button class="style">Sport</button>
-        </div>
-
-        <p id="status">Your selected style: Aviator</p>
+    <div class="styles">
+      <h3>Choose Your Style</h3>
+      <div class="actions">
+        <button class="style-btn active" data-style="aviator">Aviator</button>
+        <button class="style-btn" data-style="wayfarer">Wayfarer</button>
+        <button class="style-btn" data-style="round">Round</button>
+        <button class="style-btn" data-style="sport">Sport</button>
+      </div>
     </div>
-</section>
 
-<section class="section" id="features">
-    <h2>Why Sunglasses AI?</h2>
-    <p class="subtitle">A smarter way to explore eyewear.</p>
+    <p id="status">Upload a photo to get started.</p>
+  </section>
 
-    <div class="features">
-        <div class="feature">
-            <h3>01. Easy Upload</h3>
-            <p>Choose a photo to start your experience.</p>
-        </div>
-
-        <div class="feature">
-            <h3>02. Explore Styles</h3>
-            <p>Discover different eyewear collections.</p>
-        </div>
-
-        <div class="feature">
-            <h3>03. Smart Technology</h3>
-            <p>Our goal is to bring intelligent virtual try-on to eyewear.</p>
-        </div>
+  <section class="features">
+    <div class="feature">
+      <h3>01 — Easy Upload</h3>
+      <p>Choose a photo from your device.</p>
     </div>
-</section>
+    <div class="feature">
+      <h3>02 — Face Detection</h3>
+      <p>Face landmark technology helps position your virtual glasses.</p>
+    </div>
+    <div class="feature">
+      <h3>03 — Explore Styles</h3>
+      <p>Switch between different sunglasses styles.</p>
+    </div>
+  </section>
 </main>
 
 <footer>
-    © 2026 Sunglasses AI. All rights reserved.
+  SUNGLASSES AI. — Discover Your Style
 </footer>
 
 <script>
-const photo = document.getElementById("photo");
-const preview = document.getElementById("preview");
-const statusText = document.getElementById("status");
+  const fileInput = document.getElementById("fileInput");
+  const photo = document.getElementById("photo");
+  const glasses = document.getElementById("glasses");
+  const placeholder = document.getElementById("placeholder");
+  const statusText = document.getElementById("status");
 
-photo.addEventListener("change", function() {
-    const file = this.files[0];
+  const styles = {
+    aviator: "https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji/png/512/emoji_u1f576.png",
+    wayfarer: "https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji/png/512/emoji_u1f576.png",
+    round: "https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji/png/512/emoji_u1f576.png",
+    sport: "https://cdn.jsdelivr.net/gh/googlefonts/noto-emoji/png/512/emoji_u1f576.png"
+  };
 
+  let selectedStyle = "aviator";
+
+  function updateStyle() {
+    glasses.src = styles[selectedStyle];
+    document.querySelectorAll(".style-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.style === selectedStyle);
+    });
+  }
+
+  document.querySelectorAll(".style-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedStyle = btn.dataset.style;
+      updateStyle();
+    });
+  });
+
+  fileInput.addEventListener("change", event => {
+    const file = event.target.files[0];
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-        statusText.textContent = "Please select a valid image.";
-        return;
+      statusText.textContent = "Please choose an image file.";
+      return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-        statusText.textContent = "Image must be under 5 MB.";
-        return;
-    }
+    photo.src = URL.createObjectURL(file);
+    photo.style.display = "block";
+    placeholder.style.display = "none";
+    glasses.style.display = "block";
+    statusText.textContent = "Photo loaded. Face detection integration is next.";
+    updateStyle();
+  });
 
-    preview.src = URL.createObjectURL(file);
-    preview.style.display = "block";
-    statusText.textContent = "Photo loaded successfully!";
-});
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    photo.removeAttribute("src");
+    photo.style.display = "none";
+    glasses.style.display = "none";
+    placeholder.style.display = "block";
+    fileInput.value = "";
+    statusText.textContent = "Upload a photo to get started.";
+  });
 
-document.querySelectorAll(".style").forEach(button => {
-    button.addEventListener("click", () => {
-        document.querySelectorAll(".style").forEach(item => {
-            item.classList.remove("active");
-        });
+  document.getElementById("cameraBtn").addEventListener("click", async () => {
+    statusText.textContent =
+      "Live camera alignment will be added in the next development step.";
+  });
 
-        button.classList.add("active");
-        statusText.textContent =
-            "Your selected style: " + button.textContent;
-    });
-});
+  updateStyle();
 </script>
 
 </body>
